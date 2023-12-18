@@ -37,24 +37,27 @@ app.get('/', (req, res) => {
   });
 
   async function handle_query(input_url){
-    movie_urls=[] //List of movies in the pod
+    let movie_urls=[] //List of movies in the pod
     engine.queryBindings(``, { //TODO: complete SPARQL query
     sources: [input_url],
   }).then(function (bindingsStream) {
     bindingsStream.on('data', function (data) {
-      movie_urls.push(data.get('v').value)
+      movie_urls.push(data.get('v').value) //Variable ?v in the SPARQL query.
     });
-    engine.queryBindings(``, { //TODO: complete SPARQL query
-    sources: movie_urls,
-  }).then(function (bindingsStream) {
-    bindingsStream.on('data', function (data) {
-      obj = {
-        "name": data.get('name').value,
-        "image": data.get('image').value
-      };
-      io.emit('update', {'message': obj})
+    bindingsStream.on('end', function(){
+      engine.queryBindings(``, { //TODO: complete SPARQL query
+      sources: movie_urls,
+    }).then(function (bindingsStream) {
+      bindingsStream.on('data', function (data) {
+        let obj = {
+          "name": data.get('name').value, //Variable ?name in the SPARQL query.
+          "image": data.get('image').value //Variable ?image in the SPARQL query.
+        };
+        io.emit('update', {'message': obj}) //Send information to the browser.
+      });
     });
-  });
+    })
+    
   });
   }
   
