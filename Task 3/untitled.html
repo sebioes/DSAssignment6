@@ -1,0 +1,20 @@
+  console.log('testing')
+  //sparql
+engine.queryBindings(`SELECT ?awesomemovie WHERE { ?container <http://www.w3.org/ns/ldp#contains> <star-wars-1977> . }`, {
+    sources: [input_url],
+}).then(function (bindingsStream) {
+    let found = false; // Flag to indicate if the resource is found
+
+    bindingsStream.on('data', function (binding) {
+        console.log('The resource "star-wars-1977" is present in the container.');
+        found = true; // Set flag to true when resource is found
+    });
+
+    bindingsStream.on('end', function () {
+        if (!found) {
+            // If the resource was not found, print this message
+            console.log('The resource "star-wars-1977" is not present in the container.');
+        }
+    });
+});
+
