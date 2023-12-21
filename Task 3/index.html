@@ -1,47 +1,59 @@
 <!DOCTYPE html>
 <html>
-<head>
-</head>
-<body>
-    <div>
-        <form action="/movies" method="get">
-            <input name="url" type="text" id="url">
-            <input type="submit" value="Submit">
-            <input type="submit" value="Check for good taste">
-        </form>
-    </div>
-  <div>
-    <label>Movies:</label>
-    <ul id="movie_list"></ul>
-  </div>
-  <script src="/socket.io/socket.io.js"></script>
-<script>
-var socket = io();
-socket.on('update', (msg) => {
-  console.log("receive message");
-    message = msg['message']
-    console.log("message: ", message)
-    name = message["name"]
-    image_url = message["image"]
-    const node = document.createElement("li");
-    const divNode = document.createElement("div");
-    const textNode = document.createTextNode(name);
-    const imageNode = document.createElement("img");
-    const brNode = document.createElement("br");
-    imageNode.src = image_url
-    divNode.appendChild(textNode);
-    divNode.appendChild(brNode);
-    divNode.appendChild(imageNode)
-    node.appendChild(divNode)
-    document.getElementById("movie_list").appendChild(node);
-  });
-</script>
-<style>
-  img {
-    width: 100px;
-    height: 200px;
-  }
-</style>
+  <head> </head>
+  <body>
+    <div class="search-bar">
+      <form action="/movies" method="get">
+        <input name="url" type="text" id="url" />
+        <input type="submit" value="Submit" />
+      </form>
+      <button onclick="redirectToURL()">Go to Search Page</button>
 
-</body>
+      <script>
+        function redirectToURL() {
+          window.location.href = "/search";
+        }
+      </script>
+    </div>
+    <div>
+      <label>Movies:</label>
+      <ul id="movie_list"></ul>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+      socket.on("update", (msg) => {
+        console.log("receive message");
+        message = msg["message"];
+        console.log("message: ", message);
+        name = message["name"];
+        image_url = message["image"];
+        const node = document.createElement("li");
+        const divNode = document.createElement("div");
+        const textNode = document.createTextNode(name);
+        const imageNode = document.createElement("img");
+        const brNode = document.createElement("br");
+        imageNode.src = image_url;
+        divNode.appendChild(textNode);
+        divNode.appendChild(brNode);
+        divNode.appendChild(imageNode);
+        node.appendChild(divNode);
+        document.getElementById("movie_list").appendChild(node);
+      });
+    </script>
+    <style>
+      img {
+        width: 100px;
+        height: 200px;
+      }
+      .search-bar {
+        display: flex; /* Use flexbox */
+        align-items: center; /* Align items vertically */
+      }
+      .search-bar form,
+      .search-bar button {
+        margin-right: 10px; /* Add some spacing between elements */
+      }
+    </style>
+  </body>
 </html>
